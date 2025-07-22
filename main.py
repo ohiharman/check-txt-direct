@@ -498,7 +498,7 @@ async def start(bot, m: Message):
     caption = f"🌟 Welcome {m.from_user.mention} ! 🌟"
     start_message = await bot.send_photo(
         chat_id=m.chat.id,
-        photo="https://tinypic.host/images/2025/07/14/IMG_20250714_161041_194.jpg",
+        photo="https://tinypic.host/images/2025/07/14/Logo-1.jpg",
         caption=caption
     )
 
@@ -1067,39 +1067,40 @@ async def txt_handler(bot: Client, m: Message):
             if "acecwply" in url:
                 cmd = f'yt-dlp -o "{name}.%(ext)s" -f "bestvideo[height<={raw_text2}]+bestaudio" --hls-prefer-ffmpeg --no-keep-video --remux-video mkv --no-warning "{url}"'
 
-           elif "https://cpvod.testbook.com/" in url:
+            elif "https://cpvod.testbook.com/" in url:
                 url = url.replace("https://cpvod.testbook.com/","https://media-cdn.classplusapp.com/drm/")
-                url = f"https://cpapi-rjbs.onrender.com/extract_keys?url={url}@bots_updatee"
+                url = f"https://team-jnc-ba95987c225e.herokuapp.com/api?url={url}"
+                #url = f"https://cpapi-rjbs.onrender.com/extract_keys?url={url}@bots_updatee"
                 mpd, keys = helper.get_mps_and_keys(url)
                 url = mpd
-                
+                keys_string = " ".join([f"--key {key}" for key in keys])
 
             elif "classplusapp.com/drm/" in url:
-                url = f"https://cpapi-rjbs.onrender.com/extract_keys?url={url}@bots_updatee"
+                url = f"https://team-jnc-ba95987c225e.herokuapp.com/api?url={url}"
+                #url = f"https://cpapi-rjbs.onrender.com/extract_keys?url={url}@bots_updatee"
                 mpd, keys = helper.get_mps_and_keys(url)
                 url = mpd
-                
+                keys_string = " ".join([f"--key {key}" for key in keys])
 
             elif "classplusapp" in url:
+                signed_api = f"https://team-jnc-n-drm.vercel.app/api?url={url}"
                 response = requests.get(f"https://cpapi-rjbs.onrender.com/extract_keys?url={url}@bots_updatee")
-                url = response.json()['url']
+                url = response.text.strip()
                 
             elif "tencdn.classplusapp" in url:
-                response = requests.get(f"https://cpapi-rjbs.onrender.com/extract_keys?url={url}@bots_updatee")
-                url = response.json()['url']
+                headers = {'host': 'api.classplusapp.com', 'x-access-token': f'{cptoken}', 'accept-language': 'EN', 'api-version': '18', 'app-version': '1.4.73.2', 'build-number': '35', 'connection': 'Keep-Alive', 'content-type': 'application/json', 'device-details': 'Xiaomi_Redmi 7_SDK-32', 'device-id': 'c28d3cb16bbdac01', 'region': 'IN', 'user-agent': 'Mobile-Android', 'webengage-luid': '00000187-6fe4-5d41-a530-26186858be4c', 'accept-encoding': 'gzip'}
+                params = {"url": f"{url}"}
+                response = requests.get('https://api.classplusapp.com/cams/uploader/video/jw-signed-url', headers=headers, params=params)
+                url = response.json()['url']  
            
             elif 'videos.classplusapp' in url:
                 response = requests.get(f"https://cpapi-rjbs.onrender.com/extract_keys?url={url}@bots_updatee")
                 url = response.json()['url']
             
             elif 'media-cdn.classplusapp.com' in url or 'media-cdn-alisg.classplusapp.com' in url or 'media-cdn-a.classplusapp.com' in url: 
-                response = requests.get(f"https://cpapi-rjbs.onrender.com/extract_keys?url={url}@bots_updatee")
-                url = response.json()['url']
-            
-            elif 'media-cdn.classplusapp.com' in url or 'media-cdn-alisg.classplusapp.com' in url or 'media-cdn-a.classplusapp.com' in url: 
                 headers = {'host': 'api.classplusapp.com', 'x-access-token': f'{cptoken}', 'accept-language': 'EN', 'api-version': '18', 'app-version': '1.4.73.2', 'build-number': '35', 'connection': 'Keep-Alive', 'content-type': 'application/json', 'device-details': 'Xiaomi_Redmi 7_SDK-32', 'device-id': 'c28d3cb16bbdac01', 'region': 'IN', 'user-agent': 'Mobile-Android', 'webengage-luid': '00000187-6fe4-5d41-a530-26186858be4c', 'accept-encoding': 'gzip'}
                 params = {"url": f"{url}"}
-                response = requests.get('https://api.classplusapp.com/cams/uploader/video/jw-signed-url', headers=headers, params=params)
+                response = requests.get(f"https://cpapi-rjbs.onrender.com/extract_keys?url={url}@bots_updatee")
                 url   = response.json()['url']
 
             if "edge.api.brightcove.com" in url:
